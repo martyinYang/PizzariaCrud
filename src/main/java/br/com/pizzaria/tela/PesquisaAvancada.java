@@ -28,7 +28,7 @@ public class PesquisaAvancada extends javax.swing.JFrame {
 
     private final Utils util = new Utils();
     private Session sessao;
-    private PedidoDao pedidoDao;
+    private final PedidoDao pedidoDao;
     private List<Pedido> pedidos;
     private DefaultTableModel tabelaModelo;
 
@@ -143,9 +143,9 @@ public class PesquisaAvancada extends javax.swing.JFrame {
         String dataInicial = varDataInicial.getText().trim();
         String dataFinal = varDataFinal.getText().trim();
         if (util.verificaData(dataFinal) && util.verificaData(dataInicial)) {
-            sessao = HibernateUtil.abrirConexao();
             SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
             try {
+                sessao = HibernateUtil.abrirConexao();
                 pedidos = pedidoDao.pesquisarEntreDatas(
                         formato.parse(dataInicial), formato.parse(dataFinal), sessao);
                 sessao.close();
@@ -159,7 +159,7 @@ public class PesquisaAvancada extends javax.swing.JFrame {
             } catch (ParseException ex) {
                 JOptionPane.showMessageDialog(null,
                         "Formato de data: dd/mm/yyyy");
-                ex.getMessage();
+                System.out.println(ex.getMessage());
             }
 
         }
@@ -170,7 +170,7 @@ public class PesquisaAvancada extends javax.swing.JFrame {
         tabelaModelo.setNumRows(0);
         for (Pedido pedido : pedidos) {
             tabelaModelo.addRow(new Object[]{
-                pedido.getCliente(),
+                pedido.getCliente().getNome(),
                 pedido.getNumero(),
                 pedido.getValor_total()
             });

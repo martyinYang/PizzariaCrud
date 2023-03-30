@@ -27,30 +27,20 @@ public class PedidoDaoImpl extends BaseDaoImpl<Pedido, Long>
     }
 
     @Override
-    public List<Pedido> pesquisarPorNumero(int numero, Session session) throws HibernateException {
-        Query<Pedido> consulta = session
-                 .createQuery("from Pedido p where p.numero = :numero");
-        consulta.setParameter("numero", numero);
-        return consulta.getResultList();
-    }
-
-    @Override
-    public List<Pedido> pesquisarPorValorMaiorIgual(BigDecimal valor,
-                              Session sessao) throws HibernateException {
-       Query<Pedido> consulta = sessao
-              .createQuery("from Pedido p where p.valor_total >= :valor");
-        consulta.setParameter("valor", valor);
-        return consulta.getResultList(); 
-    }
-
-    @Override
     public List<Pedido> pesquisarEntreDatas(Date dataInicial,
             Date dataFinal, Session sessao) throws HibernateException {
          Query<Pedido> consulta = sessao
-                 .createQuery("from Pedido p where p.data between :dtInicial and :dtFinal");
+                 .createQuery("from Pedido p join fetch p.cliente where p.dt_pedido between :dtInicial and :dtFinal");
         consulta.setParameter("dtInicial", dataInicial);
         consulta.setParameter("dtFinal", dataFinal);
         return consulta.getResultList();
+    }
+
+    @Override
+    public int capturaPedido(Session sessao) throws HibernateException {
+         Query<Integer> consulta = sessao.
+                    createQuery("select max(numero) from Pedido");
+        return consulta.getSingleResult();
     }
     
     

@@ -54,20 +54,21 @@ public class CadastroCliente extends javax.swing.JFrame {
         varBairro.setText(enderecosCarregado.getBairro());
         varCep.setText(enderecosCarregado.getCep());
         varCidade.setText(enderecosCarregado.getCidade());
-        varCidade.setText(enderecosCarregado.getCidade());
         varComplemento.setText(enderecosCarregado.getComplemento());
         varEstado.setText(enderecosCarregado.getEstado());
         varNumero.setText(enderecosCarregado.getNumero());
         varObservacao.setText(enderecosCarregado.getObservacao());
         varRua.setText(enderecosCarregado.getLogradouro());
-
     }
 
-    private boolean validarFormulario() {
-        return util.verificaCampo2(varNome.getText().trim())
-                && util.verificaEmail(varEmail.getText().trim()) && 
-                        util.verificaNumerico(varTelefone.getText().trim());
-
+    private boolean validarFormulario(boolean atualizou) {
+        if (!atualizou) {
+            return util.verificaCampo2(varNome.getText().trim())
+                    && util.verificaEmail(varEmail.getText().trim())
+                    && util.verificaTelefone(varTelefone.getText().trim());
+        } else {
+            return util.verificaCampo2(varNome.getText().trim());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -299,30 +300,33 @@ public class CadastroCliente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btSalvarActionPerformed
-        if (validarFormulario()) {
-            boolean atualizou = false;
-            clienteDao = new ClienteDaoImpl();
-            sessao = HibernateUtil.abrirConexao();
-            Cliente clienteNovo = carregarCliente();
-            if (cliente != null) {
-                clienteNovo.setId(cliente.getId());
-                atualizou = true;
-            }
+        boolean atualizou = false;
+        clienteDao = new ClienteDaoImpl();
+        sessao = HibernateUtil.abrirConexao();
+        Cliente clienteNovo = carregarCliente();
+        if (cliente != null) {
+            clienteNovo.setId(cliente.getId());
+            atualizou = true;
+        }
+        if (validarFormulario(atualizou)) {
             try {
                 clienteDao.salvarOuAlterar(clienteNovo, sessao);
                 if (atualizou) {
                     JOptionPane.showMessageDialog(null, "Cliente Atualizado");
                 } else {
                     JOptionPane.showMessageDialog(null, "Cliente cadastrado");
-
                 }
 
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Erro ao salvar!!");
+            } finally {
+                sessao.close();
+                limparCampos();
+
             }
-        }
 
     }//GEN-LAST:event_btSalvarActionPerformed
+    }
 
     private Cliente carregarCliente() {
         Cliente cliente = new Cliente();
@@ -368,6 +372,19 @@ public class CadastroCliente extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_btBuscarCepActionPerformed
 
+    private void limparCampos() {
+        varNome.setText("");
+        varEmail.setText("");
+        varTelefone.setText("");
+        varBairro.setText("");
+        varCep.setText("");
+        varCidade.setText("");
+        varComplemento.setText("");
+        varEstado.setText("");
+        varNumero.setText("");
+        varObservacao.setText("");
+        varRua.setText("");
+    }
     private void varTelefoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_varTelefoneActionPerformed
 
         // TODO add your handling code here:

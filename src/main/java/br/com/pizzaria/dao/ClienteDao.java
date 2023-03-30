@@ -14,15 +14,15 @@ import org.hibernate.Session;
  *
  * @author silvio.junior
  */
-public interface ClienteDao extends BaseDao<Cliente, Long>{
-    
-    List<Cliente> pesquisarPorNome(String nome, 
-                                Session session)throws HibernateException;
-    
-    Cliente pesquisarPorTelefone(String telefone, 
-                                Session sessao) throws HibernateException;
-    
-    Cliente pesquisarEmail(String telefone, 
-                                Session sessao) throws HibernateException;
+public interface ClienteDao extends BaseDao<Cliente, Long> {
+
+    List<Cliente> pesquisarPorNome(String nome,
+            Session session) throws HibernateException;
+
+    Cliente pesquisarPorTelefone(String telefone,
+            Session sessao) throws HibernateException;
+
+    Cliente pesquisarEmail(String telefone,
+            Session sessao) throws HibernateException;
 
 }

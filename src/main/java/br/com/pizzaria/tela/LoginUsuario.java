@@ -127,16 +127,16 @@ public class LoginUsuario extends javax.swing.JFrame {
     private void btLogarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLogarActionPerformed
         String login = varLogin.getText().trim();
         String senha = String.valueOf(varSenha.getPassword());
-        sessao = HibernateUtil.abrirConexao();
-        Usuario usuarioConsulta = usuarioDao.pesquisarPorLogin(
-                login, senha, sessao);
-        if(usuarioConsulta != null){
-            new Principal().setVisible(true);
+        try {
+            sessao = HibernateUtil.abrirConexao();
+            Usuario usuarioConsulta = usuarioDao.pesquisarPorLogin(
+                    login, senha, sessao);
+            new Principal(usuarioConsulta).setVisible(true);
             this.dispose();
-        }else{
-            JOptionPane.showMessageDialog(null, "Login ou Senha incorretos");
-        } 
-        
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Usuario ou senha incorretos");
+            System.out.println(e.getMessage()); 
+        }
     }//GEN-LAST:event_btLogarActionPerformed
 
     private void btCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastrarActionPerformed

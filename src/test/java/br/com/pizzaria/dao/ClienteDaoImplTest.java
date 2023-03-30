@@ -54,16 +54,28 @@ public class ClienteDaoImplTest {
 //    @Test
     public void testPesquisarPorId() {
         System.out.println("pesquisarPorId");
+        buscarClienteBd();
+        sessao = HibernateUtil.abrirConexao();
+        Cliente clienteID = clienteDao.pesquisarPorId(cliente.getId(), sessao);
+        sessao.close();
+        assertNotNull(clienteID);
     }
 
 //    @Test
     public void testPesquisarPorNome() {
         System.out.println("pesquisarPorNome");
+        buscarClienteBd();
+        sessao = HibernateUtil.abrirConexao();
+        List<Cliente> clientenome = clienteDao.pesquisarPorNome(
+                cliente.getNome(), sessao);
+        sessao.close();
+        assertTrue(!clientenome.isEmpty());
     }
 
 //    @Test
     public void testPesquisarPorTelefone() {
         System.out.println("pesquisarPorTelefone");
+        buscarClienteBd();
         buscarClienteBd();
         sessao = HibernateUtil.abrirConexao();
         Cliente clienteTelefone = clienteDao
@@ -71,6 +83,19 @@ public class ClienteDaoImplTest {
         sessao.close();
         assertNotNull(clienteTelefone);
         assertTrue(!clienteTelefone.getPedidos().isEmpty());
+    }
+    
+//          @Test
+    public void testExcluir() {
+        System.out.println("Excluir");
+        buscarClienteBd();
+        sessao = HibernateUtil.abrirConexao();
+        clienteDao.excluir(cliente, sessao);
+
+        Cliente clienteExcluido = clienteDao
+                .pesquisarPorId(cliente.getId(), sessao);
+        sessao.close();
+        assertNull(clienteExcluido);
     }
 
     public Cliente buscarClienteBd() {

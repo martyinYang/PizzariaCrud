@@ -26,7 +26,7 @@ public class Pessoa implements Serializable {
     private String nome;    
     @Column(nullable = false, unique = true)
     private String email;    
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String telefone;
     
     @OneToMany(mappedBy = "pessoa", cascade = CascadeType.ALL)

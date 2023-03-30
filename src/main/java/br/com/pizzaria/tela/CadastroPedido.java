@@ -17,7 +17,9 @@ import java.math.BigDecimal;
 import javax.swing.JOptionPane;
 import org.hibernate.Session;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -63,6 +65,8 @@ public class CadastroPedido extends javax.swing.JFrame {
         numPedido = new javax.swing.JLabel();
         infoValor = new javax.swing.JLabel();
         valPedido = new javax.swing.JLabel();
+        infoCliente = new javax.swing.JLabel();
+        varCliente = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastrar Pedido");
@@ -108,6 +112,12 @@ public class CadastroPedido extends javax.swing.JFrame {
         valPedido.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         valPedido.setText("0000");
 
+        infoCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        infoCliente.setText("Cliente:");
+
+        varCliente.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        varCliente.setText("Nome");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -142,7 +152,11 @@ public class CadastroPedido extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(infoNum)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(numPedido))))
+                                        .addComponent(numPedido))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(infoCliente)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(varCliente))))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(175, 175, 175)
                                 .addComponent(btCadastro)))
@@ -176,7 +190,11 @@ public class CadastroPedido extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(infoValor)
                     .addComponent(valPedido))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(infoCliente)
+                    .addComponent(varCliente))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
 
         pack();
@@ -185,36 +203,50 @@ public class CadastroPedido extends javax.swing.JFrame {
 
     private void btCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btCadastroActionPerformed
         String telefone = telCliente.getText().trim();
-        String valor = valorPedido.getText().trim();
-        sessao = HibernateUtil.abrirConexao();
-        cliente = clienteDao.pesquisarPorTelefone(telefone, sessao);
-        sessao.close();
-        if (util.verificaNumerico(telefone) && util.verificaNumerico(valor)) {
-            if (cliente != null) {
-                Pedido pedido = new Pedido();
-                int numeroPedido = pedido.getNumero() + 1;
-                Date dtPedido = new Date();
-                ativaElementos();
-
-                pedido.setNumero(numeroPedido);
-                pedido.setDt_pedido(dtPedido);
-                pedido.setValor_total(BigDecimal.valueOf(Double.valueOf(valor)));
-                try {
-                    pedidoDao.salvarOuAlterar(pedido, sessao);
-                    numPedido.setText(String.valueOf(numeroPedido));
-                    SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
-                    dataPedido.setText(String.valueOf(formatador.format(dtPedido)));
-                    valPedido.setText(valor);
-                    JOptionPane.showMessageDialog(null, "Pedido cadastrado");
-
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Erro ao cadastrar Pedido");
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Cliente não cadastrado!");
-            }
+        try {
+            sessao = HibernateUtil.abrirConexao();
+            cliente = clienteDao.pesquisarPorTelefone(telefone, sessao);
+            salvarPedidos();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Telefone não cadastrado");
+            System.out.println(e.getMessage());
+        } finally {
+            sessao.close();
         }
 
+    }
+
+    private void salvarPedidos() {
+        List<Pedido> pedidos = new ArrayList();
+        String valor = valorPedido.getText().trim();
+        Date dtPedido = new Date();
+
+        if (util.verificaNumerico(valor)) {
+            Pedido pedido = new Pedido();
+            Integer numeroPedidoCapturado = pedidoDao.capturaPedido(sessao);
+            ativaElementos();
+            int numeroPedido = numeroPedidoCapturado+=1;
+
+            pedido.setNumero(numeroPedido);
+            pedido.setDt_pedido(dtPedido);
+            pedido.setValor_total(BigDecimal.valueOf(Double.valueOf(valor)));
+            pedido.setCliente(cliente);
+            try {
+                pedidoDao.salvarOuAlterar(pedido, sessao);
+                numPedido.setText(String.valueOf(numeroPedido));
+                SimpleDateFormat formatador = new SimpleDateFormat("dd/MM/yyyy");
+                dataPedido.setText(String.valueOf(formatador.format(dtPedido)));
+                valPedido.setText(valor);
+                varCliente.setText(cliente.getNome());
+                JOptionPane.showMessageDialog(null, "Pedido cadastrado");
+                pedidos.add(pedido);
+                cliente.setPedidos(pedidos);
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro ao cadastrar Pedido");
+            }
+
+        }
     }//GEN-LAST:event_btCadastroActionPerformed
 
     private void desativaElementos() {
@@ -224,6 +256,8 @@ public class CadastroPedido extends javax.swing.JFrame {
         numPedido.setVisible(false);
         dataPedido.setVisible(false);
         valPedido.setVisible(false);
+        infoCliente.setVisible(false);
+        varCliente.setVisible(false);
 
     }
 
@@ -234,6 +268,8 @@ public class CadastroPedido extends javax.swing.JFrame {
         numPedido.setVisible(true);
         dataPedido.setVisible(true);
         valPedido.setVisible(true);
+        infoCliente.setVisible(true);
+        varCliente.setVisible(true);
 
     }
 
@@ -275,6 +311,7 @@ public class CadastroPedido extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btCadastro;
     private javax.swing.JLabel dataPedido;
+    private javax.swing.JLabel infoCliente;
     private javax.swing.JLabel infoData;
     private javax.swing.JLabel infoNum;
     private javax.swing.JLabel infoValor;
@@ -285,5 +322,6 @@ public class CadastroPedido extends javax.swing.JFrame {
     private javax.swing.JLabel titulo;
     private javax.swing.JLabel valPedido;
     private javax.swing.JTextField valorPedido;
+    private javax.swing.JLabel varCliente;
     // End of variables declaration//GEN-END:variables
 }

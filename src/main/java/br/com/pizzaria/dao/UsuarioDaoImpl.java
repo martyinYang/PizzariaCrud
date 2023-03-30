@@ -25,12 +25,10 @@ public class UsuarioDaoImpl extends BaseDaoImpl<Usuario, Long>
         return sessao.find(Usuario.class, id);
     }
     
-    //TODOOOOOOOOOOOOOOO
     @Override
     public Usuario pesquisarPorLogin(String login, String senha, Session sessao) throws HibernateException {
           Query<Usuario> consulta = sessao.
-                    createQuery("select from Usuario u "
-                            + "where u.login = :log and u.senha = :sen");
+                    createQuery("from Usuario u where u.login = :log and u.senha = :sen");
         consulta.setParameter("log", login);
         consulta.setParameter("sen", senha);
         return consulta.getSingleResult();

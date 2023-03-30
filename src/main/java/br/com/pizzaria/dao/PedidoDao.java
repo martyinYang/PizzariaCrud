@@ -18,12 +18,8 @@ import org.hibernate.Session;
  */
 public interface PedidoDao extends BaseDao<Pedido, Long>{
     
-    List<Pedido> pesquisarPorNumero(int numero,
-                            Session session)throws HibernateException;
-    
-    List<Pedido> pesquisarPorValorMaiorIgual(BigDecimal valor,
-                            Session sessao)throws HibernateException;
-    
     List<Pedido> pesquisarEntreDatas(Date dataInicial, Date dataFinal,
             Session sessao) throws HibernateException;
+    
+    int capturaPedido(Session sessao) throws HibernateException;
 }

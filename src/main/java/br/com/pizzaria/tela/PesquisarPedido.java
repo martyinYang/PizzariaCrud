@@ -21,7 +21,7 @@ import org.hibernate.Session;
  * @author marty
  */
 public class PesquisarPedido extends javax.swing.JFrame {
-    
+
     Utils util = new Utils();
     private final ClienteDao clienteDao;
     private Session sessao;
@@ -150,17 +150,22 @@ public class PesquisarPedido extends javax.swing.JFrame {
     private void btPesDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btPesDataActionPerformed
         new PesquisaAvancada().setVisible(true);
     }//GEN-LAST:event_btPesDataActionPerformed
-    
+
     private void popularTabela() {
         tabelaModelo = (DefaultTableModel) varTabela.getModel();
-        tabelaModelo.setNumRows(0); //zera a tabela
-        Cliente cliente = clientes.get(0);
-        for (Pedido pedidoCliente : cliente.getPedidos()) {
-            tabelaModelo.addRow(new Object[]{
-                pedidoCliente.getCliente(),
-                pedidoCliente.getNumero(),
-                pedidoCliente.getValor_total()
-            });
+        tabelaModelo.setNumRows(0);
+        Cliente cliente = clientes.get(0); // pega somente do primeiro, se não for ai o nome tem que ser mais especifico
+        if (!cliente.getPedidos().isEmpty()) {
+            for (Pedido pedido : cliente.getPedidos()) {
+                tabelaModelo.addRow(new Object[]{
+                    pedido.getCliente().getNome(),
+                    pedido.getNumero(),
+                    pedido.getValor_total()
+                });
+            }
+        }else{
+            JOptionPane.showMessageDialog(null,
+                    "Nenhum pedido cadastrado para esse cliente");
         }
     }
 

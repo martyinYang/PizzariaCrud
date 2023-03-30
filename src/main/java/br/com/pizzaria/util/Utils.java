@@ -18,7 +18,11 @@ import org.hibernate.Session;
  */
 public class Utils {
 
+    private final ClienteDao clienteDao;
+    private Session sessao;
+
     public Utils() {
+        clienteDao = new ClienteDaoImpl();
     }
 
     public boolean verificaCampo3(String campo) {
@@ -40,33 +44,52 @@ public class Utils {
     }
 
     public boolean verificaEmail(String campo) {
-        ClienteDao clienteDao;
-        clienteDao = new ClienteDaoImpl();
-        Session sessao;
-        sessao = HibernateUtil.abrirConexao();
-        Cliente cliente = clienteDao.pesquisarEmail(campo, sessao);
-
-        if (cliente != null) {
-            if (campo.contains("@") && campo.contains(".")) {
-                return true;
-            } else {
-                JOptionPane.showMessageDialog(null, "E-mail invalido");
+        if (campo.contains("@") && campo.contains(".")) {
+            try {
+                sessao = HibernateUtil.abrirConexao();
+                Cliente clienteCaptura = clienteDao.pesquisarEmail(campo, sessao);
+                JOptionPane.showMessageDialog(null, "E-mail já cadastrado");
                 return false;
+            } catch (Exception e) {
+                return true;
+            } finally {
+                sessao.close();
             }
         } else {
-            JOptionPane.showMessageDialog(null, "E-mail já cadastrado");
+            JOptionPane.showMessageDialog(null, "E-mail invalido");
             return false;
         }
     }
 
     public boolean verificaNumerico(String campo) {
-        boolean numerico = campo.chars().allMatch(Character::isDigit);
+        String campoFormatado = campo.replace(".", "").replace(",", "");
+        boolean numerico = campoFormatado.matches("[0-9]*");
         if (numerico) {
             return true;
         } else {
             JOptionPane.showMessageDialog(null, "Valor não numérico");
             return false;
         }
+    }
+
+    public boolean verificaTelefone(String telefone) {
+        if (telefone.length() != 13) {
+            JOptionPane.showMessageDialog(null, "Telefone inválido");
+            return false;
+        } else {
+            try {
+                sessao = HibernateUtil.abrirConexao();
+                Cliente clienteCaptura = clienteDao.pesquisarPorTelefone(telefone, sessao);
+                JOptionPane.showMessageDialog(null, "Telefone já cadastrado");
+                return false;
+            } catch (Exception e) {
+                return true;
+            } finally {
+                sessao.close();
+            }
+
+        }
+
     }
 
     public boolean verificaData(String campo) {

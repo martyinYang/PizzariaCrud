@@ -5,6 +5,7 @@
  */
 package br.com.pizzaria.tela;
 
+import br.com.pizzaria.entidade.Usuario;
 import javax.swing.JOptionPane;
 
 /**
@@ -18,6 +19,11 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
+    }
+    
+    public Principal(Usuario usuario) {
+        initComponents();
+        varUsuario.setText(usuario.getNome());
     }
 
     /**
@@ -37,6 +43,13 @@ public class Principal extends javax.swing.JFrame {
         cadastroPedido = new javax.swing.JLabel();
         pesquisaPedido = new javax.swing.JLabel();
         sairSistema = new javax.swing.JLabel();
+        infoCadCliente = new javax.swing.JLabel();
+        infoPesCliente1 = new javax.swing.JLabel();
+        infoCadPedido = new javax.swing.JLabel();
+        infoPesPedido = new javax.swing.JLabel();
+        infoSair = new javax.swing.JLabel();
+        inforUsuario = new javax.swing.JLabel();
+        varUsuario = new javax.swing.JLabel();
         jMenuBar1 = new javax.swing.JMenuBar();
         operacaoCliente = new javax.swing.JMenu();
         cadCliente = new javax.swing.JMenuItem();
@@ -99,6 +112,34 @@ public class Principal extends javax.swing.JFrame {
                 sairSistemaMouseClicked(evt);
             }
         });
+
+        infoCadCliente.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        infoCadCliente.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoCadCliente.setText("Cadastrar Cliente");
+
+        infoPesCliente1.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        infoPesCliente1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoPesCliente1.setText("Pesquisar Cliente");
+
+        infoCadPedido.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        infoCadPedido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoCadPedido.setText("Cadastrar Pedido");
+
+        infoPesPedido.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        infoPesPedido.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoPesPedido.setText("Pesquisar Pedido");
+
+        infoSair.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        infoSair.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        infoSair.setText("Sair");
+
+        inforUsuario.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        inforUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        inforUsuario.setText("Usuário:");
+
+        varUsuario.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        varUsuario.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        varUsuario.setText("Usuário");
 
         operacaoCliente.setText("Cliente");
         operacaoCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
@@ -175,43 +216,79 @@ public class Principal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(143, Short.MAX_VALUE)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(inforUsuario)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(varUsuario)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
                         .addComponent(pizzaIcone1, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(titulo)
                         .addGap(18, 18, 18)
                         .addComponent(pizzaIcone, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(179, 179, 179))
+                        .addGap(175, 175, 175))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(cadastroCliente)
                         .addGap(39, 39, 39)
                         .addComponent(pesquisarCliente)
-                        .addGap(33, 33, 33)
-                        .addComponent(cadastroPedido)
-                        .addGap(37, 37, 37)
+                        .addGap(24, 24, 24)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(9, 9, 9)
+                                .addComponent(cadastroPedido)
+                                .addGap(12, 12, 12))
+                            .addComponent(infoCadPedido))
+                        .addGap(25, 25, 25)
                         .addComponent(pesquisaPedido)
                         .addGap(32, 32, 32)
                         .addComponent(sairSistema)
                         .addGap(142, 142, 142))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(135, 135, 135)
+                .addComponent(infoCadCliente)
+                .addGap(18, 18, 18)
+                .addComponent(infoPesCliente1)
+                .addGap(115, 115, 115)
+                .addComponent(infoPesPedido)
+                .addGap(42, 42, 42)
+                .addComponent(infoSair)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(pizzaIcone1)
                     .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(pizzaIcone))
+                    .addComponent(pizzaIcone)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(inforUsuario)
+                            .addComponent(varUsuario))
+                        .addComponent(pizzaIcone1)))
                 .addGap(40, 40, 40)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cadastroCliente)
-                    .addComponent(pesquisarCliente)
-                    .addComponent(cadastroPedido)
-                    .addComponent(pesquisaPedido)
-                    .addComponent(sairSistema))
-                .addContainerGap(92, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cadastroCliente)
+                            .addComponent(pesquisarCliente)
+                            .addComponent(pesquisaPedido)
+                            .addComponent(sairSistema))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(infoCadCliente)
+                                .addComponent(infoPesCliente1)
+                                .addComponent(infoPesPedido))
+                            .addComponent(infoSair)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(cadastroPedido)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(infoCadPedido)))
+                .addContainerGap(73, Short.MAX_VALUE))
         );
 
         pizzaIcone.getAccessibleContext().setAccessibleDescription("Icone Pizza");
@@ -331,6 +408,12 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel cadastroCliente;
     private javax.swing.JLabel cadastroPedido;
     private javax.swing.JMenuItem deslogar;
+    private javax.swing.JLabel infoCadCliente;
+    private javax.swing.JLabel infoCadPedido;
+    private javax.swing.JLabel infoPesCliente1;
+    private javax.swing.JLabel infoPesPedido;
+    private javax.swing.JLabel infoSair;
+    private javax.swing.JLabel inforUsuario;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenu operacaoCliente;
     private javax.swing.JMenuItem pesCliente;
@@ -342,5 +425,6 @@ public class Principal extends javax.swing.JFrame {
     private javax.swing.JLabel sairSistema;
     private javax.swing.JMenuItem sistema;
     private javax.swing.JLabel titulo;
+    private javax.swing.JLabel varUsuario;
     // End of variables declaration//GEN-END:variables
 }

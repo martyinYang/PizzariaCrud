@@ -39,7 +39,7 @@ public class ClienteDaoImpl extends BaseDaoImpl<Cliente, Long>
     public Cliente pesquisarPorTelefone(String telefone,
             Session sessao) throws HibernateException {
         Query<Cliente> consulta = sessao.
-                createQuery("select distinct(c) from Cliente c join fetch c.pedidos "
+                createQuery("select distinct(c) from Cliente c join fetch c.enderecos "
                         + "where c.telefone = :tel");
         consulta.setParameter("tel", telefone);
         return consulta.getSingleResult();

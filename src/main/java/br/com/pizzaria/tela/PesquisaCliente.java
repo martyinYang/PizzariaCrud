@@ -25,7 +25,6 @@ public class PesquisaCliente extends javax.swing.JFrame {
     Utils util = new Utils();
     private final ClienteDao clienteDao;
     private Session sessao;
-    private Cliente cliente;
     private List<Cliente> clientes;
     private DefaultTableModel tabelaModelo;
 

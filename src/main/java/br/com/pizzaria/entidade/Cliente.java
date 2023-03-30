@@ -6,6 +6,7 @@
 package br.com.pizzaria.entidade;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
@@ -23,7 +24,7 @@ public class Cliente extends Pessoa{
     
     private boolean cupom;
     
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", fetch = FetchType.EAGER)
     private List<Pedido> pedidos;
 
     public Cliente() {

@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import org.hibernate.Session;
+import org.hibernate.query.Query;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,9 +34,8 @@ public class PedidoDaoImplTest {
     public void testSalvar() {
         System.out.println("salvar");
         ClienteDaoImplTest cdit = new ClienteDaoImplTest();
-        
-        
-        pedido = new Pedido(5, new BigDecimal(gerarNumero(3)),new Date());
+
+        pedido = new Pedido(5, new BigDecimal(gerarNumero(3)), new Date());
         pedido.setCliente(cdit.buscarClienteBd());
         sessao = HibernateUtil.abrirConexao();
         pedidoDao.salvarOuAlterar(pedido, sessao);
@@ -46,16 +46,36 @@ public class PedidoDaoImplTest {
 //    @Test
     public void testPesquisarPorId() {
         System.out.println("pesquisarPorId");
+        buscarClienteBd();
+        sessao = HibernateUtil.abrirConexao();
+        Pedido pedidoId = pedidoDao.pesquisarPorId(pedido.getId(), sessao);
+        sessao.close();
+        assertNotNull(pedidoId);
     }
 
-//    @Test
-    public void testPesquisarPorNumero() {
-        System.out.println("pesquisarPorNumero");
+//        @Test
+    public void pesquisarEntreDatas() {
+        System.out.println("pesquisar por datas");
+        buscarClienteBd();
+        sessao = HibernateUtil.abrirConexao();
+        List<Pedido> pedidoDatas = pedidoDao.pesquisarEntreDatas(pedido.getDt_pedido(), pedido.getDt_pedido(), sessao);
+        sessao.close();
+        assertTrue(!pedidoDatas.isEmpty());
     }
 
-//    @Test
-    public void testPesquisarPorValorMaiorIgual() {
-        System.out.println("pesquisarPorValorMaiorIgual");
+    
+    public Pedido buscarClienteBd() {
+        sessao = HibernateUtil.abrirConexao();
+        Query<Pedido> consulta = sessao.createQuery("from Pedido p");
+        List<Pedido> pedidos = consulta.getResultList();
+        sessao.close();
+
+        if (pedidos.isEmpty()) {
+            testSalvar();
+        } else {
+            pedido = pedidos.get(0);
+        }
+        return pedido;
     }
 
 }
